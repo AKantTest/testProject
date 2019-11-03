@@ -1,0 +1,4 @@
+module hcapiplugin {
+    umbrella "/Users/kant/Documents/Develop/Courses/S3/Kitura/2019.08.18_QUIZ_Server/.build/checkouts/omr-agentcore/src/hcapiplugin/include"
+    export *
+}
