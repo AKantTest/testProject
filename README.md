@@ -1,4 +1,4 @@
-# S3_QuizServer_Kitura
+# S3 QuizServer with Kitura
 
 ## Scaffolded Swift Kitura server application
 
@@ -25,12 +25,15 @@ This application has been generated with the following capabilities and services
 
 
 ### Requirements
-* [Swift 4](https://swift.org/download/)
+* [Swift 5](https://swift.org/download/)
 
 ### Run
 To build and run the application:
 1. `swift build`
-1. `.build/debug/ServerKitura`
+2. `swift package generate-xcodeproj`
+3. `brew install postgresq`
+4. `createdb quizdb`
+5. `.build/debug/ServerKitura` or `open in Xcode and Run`
 
 #### Docker
 A description of the files related to Docker can be found in the [Docker files](#docker-files) section. To build the two Docker images, run the following commands from the root directory of the project.
