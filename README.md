@@ -1,20 +1,31 @@
-# S3 QuizServer with Kitura
 
-## Scaffolded Swift Kitura server application
+## S3 QuizServer with Kitura
 
-This scaffolded application provides a starting point for creating Swift applications running on [Kitura](http://www.kitura.io/).
+This is an example of **Swift Kitura** backend for **Quiz game**
 
 ### Table of Contents
-* [Requirements](#requirements)
-* [Project contents](#project-contents)
-* [Run](#run)
-* [Configuration](#configuration)
-* [Deploy to IBM Cloud](#deploy-to-ibm-cloud)
-* [Service descriptions](#service-descriptions)
-* [License](#license)
-* [Generator](#generator)
+
+- [S3 QuizServer with Kitura](#s3-quizserver-with-kitura)
+  - [Table of Contents](#table-of-contents)
+    - [Project contents](#project-contents)
+  - [Requirements](#requirements)
+  - [Run](#run)
+    - [Docker](#docker)
+    - [Kubernetes](#kubernetes)
+  - [Configuration](#configuration)
+    - [Iterative Development](#iterative-development)
+  - [Deploy to IBM Cloud](#deploy-to-ibm-cloud)
+    - [CloudFoundry CLI](#cloudfoundry-cli)
+    - [IBM Cloud toolchain](#ibm-cloud-toolchain)
+  - [Service descriptions](#service-descriptions)
+    - [Embedded metrics dashboard](#embedded-metrics-dashboard)
+    - [Docker files](#docker-files)
+    - [IBM Cloud deployment](#ibm-cloud-deployment)
+  - [License](#license)
+  - [Generator](#generator)
 
 #### Project contents
+
 This application has been generated with the following capabilities and services, which are described in full in their respective sections below:
 
 * [CloudEnvironment](#configuration)
@@ -23,40 +34,52 @@ This application has been generated with the following capabilities and services
 * [Iterative Development](#iterative-development)
 * [IBM Cloud deployment](#ibm-cloud-deployment)
 
-
 ### Requirements
+
 * [Swift 5](https://swift.org/download/)
+* [PostgreSQL](https://www.postgresql.org/download/) for the database
 
 ### Run
+
 To build and run the application:
-1. `swift build`
-2. `swift package generate-xcodeproj`
-3. `brew install postgresq`
-4. `createdb quizdb`
-5. `.build/debug/ServerKitura` or `open in Xcode and Run`
+
+1. `swift build`                        # build swift project
+2. `swift package generate-xcodeproj`   # generate xcodeproj file
+3. `brew install postgresq`             # install PostgreSQL on localhost
+4. `createdb quizdb`                    # cretae database with name **quizdb**
+5. `.build/debug/ServerKitura`
+or `open in Xcode and Run`              # run server on localhost
 
 #### Docker
+
 A description of the files related to Docker can be found in the [Docker files](#docker-files) section. To build the two Docker images, run the following commands from the root directory of the project.
 
 First, build the 'tools' image. This image contains a full Linux Swift toolchain and is capable of compiling your application for Linux:
+
 * `docker build --tag myapp-build --file Dockerfile-tools .`
+
 You may customize the names of these images by specifying a different value after the `-t` option.
 
 To compile the application for Linux using the tools Docker image, run:
+
 * `docker run --volume $PWD:/swift-project --workdir /swift-project myapp-build /swift-utils/tools-utils.sh build release`
 This produces a `.build-ubuntu` directory which will be incorporated into your final image.
 
 Now that your application has been built, you can build the final run image:
+
 * `docker build --tag myapp-run .`
 
 Finally, to run the application:
+
 * `docker run -it --publish 8080:8080 myapp-run`
 
 
 #### Kubernetes
+
 To deploy your application to your Kubernetes cluster, run `helm install --name myapp .` in the `/chart/ServerKitura` directory. You need to make sure you change the `repository` variable in your `chart/ServerKitura/values.yaml` file points to the docker image containing your runnable application.
 
 ### Configuration
+
 Your application configuration information for any services is stored in the `localdev-config.json` file in the `config` directory. This file is in the `.gitignore` to prevent sensitive information from being stored in git. The connection information for any configured services that you would like to access when running locally, such as username, password and hostname, is stored in this file.
 
 The application uses the [CloudEnvironment package](https://github.com/IBM-Swift/CloudEnvironment) to read the connection and configuration information from the environment and this file. It uses `mappings.json`, found in the `config` directory, to communicate where the credentials can be found for each service.
@@ -66,6 +89,7 @@ If the application is running locally, it can connect to IBM Cloud services usin
 When you push your application to IBM Cloud, these values are no longer used, instead the application automatically connects to bound services using environment variables.
 
 #### Iterative Development
+
 The `iterative-dev.sh` script is included in the root of the generated Swift project and allows for fast & easy iterations for the developer. Instead of stopping the running Kitura server to see new code changes, while the script is running, it will automatically detect changes in the project's **.swift** files and recompile the app accordingly.
 
 To use iterative development:
@@ -80,8 +104,8 @@ You can deploy your application to IBM Cloud using:
 #### CloudFoundry CLI
 You can deploy the application using the IBM Cloud command-line:
 1. Install the [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/index.html)
-1. Ensure all configured services have been provisioned
-1. Run `ibmcloud app push` from the project root directory
+2. Ensure all configured services have been provisioned
+3. Run `ibmcloud app push` from the project root directory
 
 The Cloud Foundry CLI will not provision the configured services for you, so you will need to do this manually using the IBM Cloud web console ([example](https://cloud.ibm.com/docs/services/Cloudant/tutorials/create_service.html#creating-a-service-instance)) or the CloudFoundry CLI (`cf create-service` command)[http://cli.cloudfoundry.org/en-US/cf/create-service.html]. The service names and types will need to match your [configuration](#configuration).
 
